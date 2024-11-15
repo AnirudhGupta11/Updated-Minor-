@@ -4,7 +4,7 @@ import numpy as np
 from sklearn.tree import DecisionTreeClassifier
 
 # Load the trained model
-with open("D:/Updated Minor/fraud_detection_model.pkl", "rb") as model_file:
+with open("Updated-Minor-/fraud_detection_model.pkl", "rb") as model_file:
     model = pickle.load(model_file)
 
 # Title and instructions
