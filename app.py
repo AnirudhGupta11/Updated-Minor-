@@ -30,8 +30,8 @@ if st.button("Predict Fraud"):
     prediction = model.predict(input_data)
 
     # Prerequisite Condition
-    if transaction_amount < old_balance:
-        st.success(f"Transaction approved! Remaining balance: {old_balance - transaction_amount}")
+    if amount < old_balance:
+        st.success(f"Transaction approved! Remaining balance: {old_balance - amount}")
     else:
         st.error("Error: Transaction amount must be strictly less than the old balance.")
     
