@@ -31,7 +31,7 @@ if st.button("Predict Fraud"):
 
     # Prerequisite Condition
     if (amount + new_balance <= old_balance):
-        st.success(f"Transaction has been approved")
+        st.success(f"Transaction has been approved!")
         if prediction[0] == 'Fraud':
             st.error("This transaction is predicted to be FRAUDULENT!")
         else:
