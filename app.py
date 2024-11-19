@@ -1,10 +1,13 @@
 import streamlit as st
 import pickle
 import numpy as np
-from sklearn.tree import DecisionTreeClassifier
+from sklearn.tree import DecisionTreeClassifier, plot_tree
+from sklearn.decomposition import PCA
+from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
+import matplotlib.pyplot as plt
 
 # Load the trained model
-with open("fraud_detection_model.pkl", "rb") as model_file:
+with open("D://project//fraud_detection_model.pkl", "rb") as model_file:
     model = pickle.load(model_file)
 
 # Title and instructions
@@ -28,15 +31,72 @@ if st.button("Predict Fraud"):
     
     # Make prediction
     prediction = model.predict(input_data)
-
-    # Prerequisite Condition
-    if (amount + new_balance <= old_balance):
-        st.success(f"Transaction has been approved!")
-        if prediction[0] == 'Fraud':
-            st.error("This transaction is predicted to be FRAUDULENT!")
-        else:
-            st.success("This transaction is predicted to be LEGITIMATE.")
+    
+    # Display result
+    if prediction[0] == 'Fraud':
+        st.error("This transaction is predicted to be FRAUDULENT!")
     else:
-        st.error("Error: Transaction can't be possible. Kindly add correct details.")
+        st.success("This transaction is predicted to be LEGITIMATE.")
 
-# Run Streamlit using the command in the terminal: streamlit run app.py
+# Section for Visualizations
+st.header("Visualizations")
+
+# Visualization 1: Decision Tree (ID3)
+if st.checkbox("Show Decision Tree"):
+    st.subheader("Decision Tree Visualization")
+    fig, ax = plt.subplots(figsize=(12, 8))
+    plot_tree(model, feature_names=["Transaction Type", "Amount", "Old Balance", "New Balance"], filled=True, ax=ax)
+    st.pyplot(fig)
+
+# Visualization 2: Confusion Matrix with Simulated Test Data
+if st.checkbox("Show Confusion Matrix"):
+    st.subheader("Confusion Matrix")
+    try:
+        # Simulated test data
+        X_test = np.array([
+            [1, 1000.0, 5000.0, 4000.0],  # PAYMENT
+            [2, 2000.0, 3000.0, 1000.0],  # CASH_OUT
+            [4, 500.0, 2000.0, 1500.0],   # TRANSFER
+            [3, 1000.0, 1500.0, 500.0],   # CASH_IN
+            [5, 200.0, 1000.0, 800.0]     # DEBIT
+        ])
+        y_test = ["Legitimate", "Fraud", "Legitimate", "Fraud", "Legitimate"]  # Simulated true labels
+
+        # Generate predictions
+        y_pred = model.predict(X_test)
+
+        # Generate confusion matrix
+        cm = confusion_matrix(y_test, y_pred, labels=model.classes_)
+        disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=model.classes_)
+
+        # Plot confusion matrix
+        fig, ax = plt.subplots(figsize=(6, 6))
+        disp.plot(cmap=plt.cm.Blues, ax=ax)
+        st.pyplot(fig)
+    except Exception as e:
+        st.error(f"Confusion matrix cannot be displayed: {e}")
+
+# Visualization 3: PCA
+if st.checkbox("Show PCA"):
+    st.subheader("PCA Visualization")
+    try:
+        # Simulated data for PCA
+        X = np.random.rand(100, 4)  # Simulate 100 data points with 4 features
+        y = np.random.choice(["Legitimate", "Fraud"], 100)  # Simulated labels
+        
+        pca = PCA(n_components=2)
+        X_pca = pca.fit_transform(X)
+        
+        fig, ax = plt.subplots(figsize=(8, 6))
+        scatter = ax.scatter(X_pca[:, 0], X_pca[:, 1], c=[1 if label == "Fraud" else 0 for label in y], cmap="viridis", s=50)
+        ax.set_title("PCA Visualization")
+        ax.set_xlabel("Principal Component 1")
+        ax.set_ylabel("Principal Component 2")
+        fig.colorbar(scatter, ax=ax, label="Class")
+        st.pyplot(fig)
+    except Exception as e:
+        st.error(f"PCA visualization cannot be displayed: {e}")
+
+# Instructions to run the app
+st.write("To run the app, use the command in your terminal:")
+st.code("streamlit run app.py")
