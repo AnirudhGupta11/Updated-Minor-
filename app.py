@@ -28,21 +28,37 @@ transaction_type_value = type_map[transaction_type]
 if st.button("Predict Fraud"):
     # Prepare input data in the format expected by the model
     input_data = np.array([[transaction_type_value, amount, old_balance, new_balance]])
-    
-    # Make prediction
-    prediction = model.predict(input_data)
 
-    if amount>0 and old_balance>=0 and new_balance>=0:
-        if (amount + new_balance <= old_balance):
-            st.success("The transaction has been approved.")
-            if prediction[0] == 'Fraud':
-                st.error("This transaction is predicted to be FRAUDULENT!")
-            else:
-                st.success("This transaction is predicted to be LEGITIMATE.")
+    # Transaction-specific validations
+    valid_transaction = True
+
+    if transaction_type == "CASH_IN":
+        if not (new_balance < old_balance and new_balance > old_balance + amount):
+            valid_transaction = False
+            st.error("Invalid transaction: For CASH_IN, new balance must be strictly less than old balance and greater than old balance + amount.")
+
+    elif transaction_type == "CASH_OUT":
+        if not (old_balance > new_balance and old_balance >= new_balance + amount):
+            valid_transaction = False
+            st.error("Invalid transaction: For CASH_OUT, old balance must be strictly greater than new balance and greater than or equal to new balance + amount.")
+
+    elif transaction_type in ["DEBIT", "PAYMENT"]:
+        if not (new_balance < old_balance):
+            valid_transaction = False
+            st.error(f"Invalid transaction: For {transaction_type}, new balance must be strictly less than old balance.")
+
+    else:  # Default validation for TRANSFER and other types
+        if not (amount + new_balance <= old_balance):
+            valid_transaction = False
+            st.error("Invalid transaction: The sum of amount and new balance cannot exceed the old balance.")
+
+    # Make prediction if transaction is valid
+    if valid_transaction:
+        prediction = model.predict(input_data)
+        if prediction[0] == 'Fraud':
+            st.error("This transaction is predicted to be FRAUDULENT!")
         else:
-            st.error("Transaction can't be proceeded due to incorrect entries.")
-    else:
-        st.error("Please enter correct details for the transaction to get completed.")
+            st.success("This transaction is predicted to be LEGITIMATE.")
 
 # Section for Visualizations
 st.header("Visualizations")
