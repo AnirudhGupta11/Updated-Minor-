@@ -31,15 +31,18 @@ if st.button("Predict Fraud"):
     
     # Make prediction
     prediction = model.predict(input_data)
-    
-    if (amount + new_balance <= old_balance):
-        st.success("The transaction has been approved.")
-        if prediction[0] == 'Fraud':
-            st.error("This transaction is predicted to be FRAUDULENT!")
+
+    if amount>0 && old_balance>=0 && new_balance>=0:
+        if (amount + new_balance <= old_balance):
+            st.success("The transaction has been approved.")
+            if prediction[0] == 'Fraud':
+                st.error("This transaction is predicted to be FRAUDULENT!")
+            else:
+                st.success("This transaction is predicted to be LEGITIMATE.")
         else:
-            st.success("This transaction is predicted to be LEGITIMATE.")
+            st.error("Transaction can't be proceeded due to incorrect entries.")
     else:
-        st.error("Transaction can't be proceeded due to incorrect entries.")
+        st.error("Please enter correct details for the transaction to get completed.")
 
 # Section for Visualizations
 st.header("Visualizations")
