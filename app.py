@@ -7,7 +7,7 @@ from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
 import matplotlib.pyplot as plt
 
 # Load the trained model
-with open("D://project//fraud_detection_model.pkl", "rb") as model_file:
+with open("fraud_detection_model.pkl", "rb") as model_file:
     model = pickle.load(model_file)
 
 # Title and instructions
@@ -32,11 +32,14 @@ if st.button("Predict Fraud"):
     # Make prediction
     prediction = model.predict(input_data)
     
-    # Display result
-    if prediction[0] == 'Fraud':
-        st.error("This transaction is predicted to be FRAUDULENT!")
+    if (amount + new_balance <= old_balance):
+        st.success("The transaction has been approved.")
+        if prediction[0] == 'Fraud':
+            st.error("This transaction is predicted to be FRAUDULENT!")
+        else:
+            st.success("This transaction is predicted to be LEGITIMATE.")
     else:
-        st.success("This transaction is predicted to be LEGITIMATE.")
+        st.error("Transaction can't be proceeded due to incorrect entries.")
 
 # Section for Visualizations
 st.header("Visualizations")
