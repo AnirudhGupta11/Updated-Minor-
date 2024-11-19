@@ -37,6 +37,6 @@ if st.button("Predict Fraud"):
         else:
             st.success("This transaction is predicted to be LEGITIMATE.")
     else:
-        st.error("Error: Transaction amount must be strictly less than the old balance.")
+        st.error("Error: Transaction can't be possible. Kindly add correct details.")
 
 # Run Streamlit using the command in the terminal: streamlit run app.py
