@@ -7,7 +7,7 @@ import plotly.express as px
 from sklearn.tree import DecisionTreeClassifier
 import pickle
 
-df=pd.read_csv('D:/Updated Minor/fraud_detection.csv')
+df=pd.read_csv('fraud_detection.csv')
 (df.head())
 
 (df.isnull().sum())
