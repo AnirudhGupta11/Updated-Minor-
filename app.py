@@ -32,7 +32,7 @@ if st.button("Predict Fraud"):
     # Make prediction
     prediction = model.predict(input_data)
 
-    if amount>0 && old_balance>=0 && new_balance>=0:
+    if amount>0 and old_balance>=0 and new_balance>=0:
         if (amount + new_balance <= old_balance):
             st.success("The transaction has been approved.")
             if prediction[0] == 'Fraud':
