@@ -1,9 +1,6 @@
 import pandas as pd
 import numpy as np
-import seaborn as sns
-import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
-import plotly.express as px
 from sklearn.tree import DecisionTreeClassifier
 import pickle
 
@@ -21,8 +18,6 @@ type=df['type'].value_counts()
 transactions=type.index
 
 quantity=type.values
-
-px.pie(df,values=quantity,names=transactions,hole=0.4,title="Distribution of Transaction Type")
 
 df=df.dropna() 
 (df)
@@ -55,10 +50,10 @@ model=DecisionTreeClassifier()
 
 (model.score(xtest,ytest))  #Model completed
 
-'''Ensure the input is reshaped to 2D (1 row, 4 columns in this case)'''
+'''Ensure the input is reshaped to 2D (1 row, 4 columns in this case)
 prediction = model.predict([[4,181,181,0]])
 print(prediction)
-
+'''
 
 '''Save the trained model as a .pkl file
 with open("D:/Updated Minor/fraud_detection_model.pkl", "wb") as model_file:
