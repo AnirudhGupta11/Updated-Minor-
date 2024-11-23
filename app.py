@@ -118,7 +118,3 @@ if st.checkbox("Show PCA"):
         st.pyplot(fig)
     except Exception as e:
         st.error(f"PCA visualization cannot be displayed: {e}")
-
-# Instructions to run the app
-st.write("To run the app, use the command in your terminal:")
-st.code("streamlit run app.py")
